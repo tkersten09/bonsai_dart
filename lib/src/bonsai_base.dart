@@ -21,7 +21,14 @@ class Log {
       final mesg = '${rec.level.name}: ${rec.time}: ${rec.message}';
       if (true == useStd) {
         if (rec.level >= Level.SEVERE) {
-          stderr.writeln('$mesg\n${rec.error}\n${rec.stackTrace}');
+          String _msg = '$mesg';
+          if (rec.error != null) {
+            _msg += '\nerror: ${rec.error}';
+          }
+          if (rec.stackTrace != null) {
+            _msg += '\nstackTrace: ${rec.stackTrace}';
+          }
+          stderr.writeln(_msg);
         } else {
           stdout.writeln(mesg);
         }
@@ -38,10 +45,12 @@ class Log {
   static void i(String tag, String mesg) => _logger.info('[$tag] $mesg');
 
   /// warning level message
-  static void w(String tag, String mesg, {Object? data}) => _logger.warning('[$tag] $mesg');
+  static void w(String tag, String mesg, {Object? data}) =>
+      _logger.warning('[$tag] $mesg');
 
   /// error level message
-  static void e(String mesg, [Object? error, StackTrace? stackTrace]) => _logger.severe(mesg, error, stackTrace);
+  static void e(String mesg, [Object? error, StackTrace? stackTrace]) =>
+      _logger.severe(mesg, error, stackTrace);
 }
 
 extension BonsaiLogExt on Object {
